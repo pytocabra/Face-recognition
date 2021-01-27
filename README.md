@@ -20,3 +20,4 @@ The easiest way to run the project is to create an anaconda environment and inst
 
 ## Important
 This repository has not the dataset and the pre-trained model files. These files do not meet the maximum file standards on github. You can get the model from: https://1drv.ms/u/s!Au8HZ076-lBxgi6f7ViFkoy1sZzK?e=6TcPcc
+After downloading these files, extract them to the repository directory.
