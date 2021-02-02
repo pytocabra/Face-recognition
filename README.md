@@ -22,6 +22,7 @@ After downloading these files, extract them to the repository directory.
 
 ## Pre-trained model
 The pre-trained was trained on on a dataset containing 200 pictures of each person. The model accuracy was 88.75% on a training set.
+The model is based on 4 Conv2D layers with 64, 64, 128 and 256 filters respectively. 
 
 ## Face detection
 For the purpose of the face detection was used the Haar Cascade Clasifier. The file of this clasifier is included in this repository. 
