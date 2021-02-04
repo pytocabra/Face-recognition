@@ -12,7 +12,6 @@ from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-#from PyQt5.QtGui import QPainter, QPen, QColor
 from PyQt5.QtWidgets import QMessageBox
 
 
@@ -32,6 +31,7 @@ class Ui_MainWindow(object):
     
 
     def setupUi(self, MainWindow):
+        # create main window 
         MainWindow.setObjectName("MainWindow")
         MainWindow.setFixedSize(1274, 720)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -290,6 +290,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
+        # add values to widgets 
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Facial recognition system"))
         self.labelSettings.setText(_translate("MainWindow", "Settings"))
@@ -350,6 +351,7 @@ class Ui_MainWindow(object):
         
 
     def process_image(self, path):
+        # detect face and preprocess image
         img = cv2.imread(path, cv2.IMREAD_COLOR)
         detected_faces = self.face_cascade.detectMultiScale(img, 1.3, 5)
         X_test = []
@@ -368,9 +370,9 @@ class Ui_MainWindow(object):
 #################### Button Events ####################
 
     def clickedLoadPhoto(self):
+        # Load Photo on button click
         path = self.pathLine.text()
         image = QtGui.QPixmap(path)
-        # tu ryj
         scaledImage = image.scaled(self.photo.size(), QtCore.Qt.KeepAspectRatio)
         self.photo.setPixmap(scaledImage)
         self.pathLine.clear()
@@ -378,10 +380,10 @@ class Ui_MainWindow(object):
             self.loadErrorPopup()
         else:
             self.face_image = self.process_image(path)
-            #self.drawFaceRect()
 
 
     def importTrainData(self): 
+        # load train data from pickle files
         with open(os.path.join(cwd, 'faces_x_pickle.pkl'), 'rb') as pickle_file:
             self.X = pickle.load(pickle_file) 
         with open(os.path.join(cwd, 'faces_y_pickle.pkl'), 'rb') as pickle_file:
@@ -389,6 +391,7 @@ class Ui_MainWindow(object):
 
 
     def clickedTrainModel(self):
+        # Train Model on button click. Create model from choosen parameters.
         conv_filters = []
         conv_filters.append([int(self.filtersConv2D1.currentText()),  int(self.kernelConv2D1.currentText())])
         conv_filters.append([int(self.filtersConv2D2.currentText()),  int(self.kernelConv2D2.currentText())])
@@ -421,14 +424,17 @@ class Ui_MainWindow(object):
         self.importTrainData()
         self.trainingPopup()
         history = model.fit(self.X, self.y, batch_size=batch_size, epochs=epochs, validation_split=validation_split)
+        self.model = model
         self.trainingDonePopup(history)
 
     
     def clickedLoadModel(self):
+        # load pre-trained model on button click
         self.model = tf.keras.models.load_model('saved_model/')
 
 
     def clickedRunFaceRecognition(self):
+    # Face Recognition on button click. Regonise face in the picture.
         if (self.face_image is not None) and (self.model is not None):
             prediction = self.model.predict(self.face_image)
             confidence = max(prediction[0])*100
